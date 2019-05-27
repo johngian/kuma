@@ -42,7 +42,7 @@ from ..decorators import (allow_CORS_GET, check_readonly, prevent_indexing,
                           process_document_path)
 from ..events import EditDocumentEvent, EditDocumentInTreeEvent
 from ..forms import TreeMoveForm
-from ..models import (Document, DocumentDeletionLog,
+from ..models import (BCDSignal, Document, DocumentDeletionLog,
                       DocumentRenderedContentNotAvailable)
 from ..tasks import move_page
 
@@ -1014,3 +1014,24 @@ def _document_api_PUT(request, document_slug, document_locale):
         resp.status_code = 205
 
     return resp
+
+
+@process_document_path
+def bcd_signal(request, document_slug, document_locale):
+    """Handle BCD data signals."""
+
+    doc, _ = _get_doc_and_fallback_reason(
+        document_locale, document_slug
+    )
+
+    if doc is None:
+        raise Http404
+
+    user = request.user if request.user.is_authenticated else None
+
+    BCDSignal.objects.create(
+        document=doc,
+        user=user
+    )
+
+    return redirect(doc)

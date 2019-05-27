@@ -84,6 +84,10 @@ document_patterns = [
         views.document.subscribe_to_tree,
         name='wiki.subscribe_to_tree'),
 
+    url(r'^\$bcd-signal',
+        views.document.bcd_signal,
+        name='wiki.bcd_signal')
+
 ]
 
 non_document_patterns = [
