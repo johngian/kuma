@@ -2012,3 +2012,28 @@ class DocumentSpamAttempt(SpamAttempt):
 
     def __unicode__(self):
         return u'%s (%s)' % (self.slug, self.title)
+
+
+class BCDSignal(models.Model):
+    """Model to keep track of the BCD signals."""
+    document = models.ForeignKey(
+        Document,
+        related_name='bcd_signals',
+        null=True,
+        blank=True,
+        verbose_name=_('Document (optional)'),
+        on_delete=models.SET_NULL
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL
+    )
+    submitted_at = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return u'BCD Signal: %s' % (self.slug)
+
+    class Meta:
+        verbose_name = 'BCD Signal'
